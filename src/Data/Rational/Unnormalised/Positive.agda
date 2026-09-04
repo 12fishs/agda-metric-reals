@@ -11,7 +11,7 @@ open import Algebra using (Commutative; Associative;
                            IsMonoid; IsCommutativeMonoid; IsGroup; IsAbelianGroup; AbelianGroup)
 open import Level using (0ℓ)
 open import Data.Product using (Σ-syntax; _,_)
-open import Data.Nat as ℕ using (ℕ; zero; suc)
+open import Data.Nat as ℕ using (ℕ; zero; suc; NonZero)
 import Data.Nat.Properties as ℕ
 open import Data.Rational.Unnormalised as ℚ using (↥_) renaming (ℚᵘ to ℚ; 0ℚᵘ to 0ℚ; 1ℚᵘ to 1ℚ)
 import Data.Rational.Unnormalised.Properties as ℚ
@@ -53,7 +53,7 @@ _*_ : ℚ⁺ → ℚ⁺ → ℚ⁺
     ℚ.positive (ℚ.≤-<-trans (ℚ.≤-reflexive (ℚ.≃-sym (ℚ.*-zeroʳ (q .rational))))
                            (ℚ.*-monoʳ-<-pos {q .rational} (q .positive) (ℚ.positive⁻¹ {r .rational} (r .positive))))
 
-positive⇒nonzero : ∀ {p} → ℚ.Positive p → ℤ.∣ ↥ p ∣ ℚ.≢0
+positive⇒nonzero : ∀ {p} → ℚ.Positive p → ℕ.NonZero (ℤ.∣ ↥ p ∣)
 positive⇒nonzero {ℚ.mkℚᵘ (+_ (suc n)) denominator-1} +ve = tt
 
 1/-positive : ∀ p → (+ve : ℚ.Positive p) → ℚ.Positive (ℚ.1/_ p {positive⇒nonzero {p} +ve})

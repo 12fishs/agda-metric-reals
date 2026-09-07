@@ -45,31 +45,31 @@ gof q q>0 .positive = ℚ.positive q>0
 
 _+_ : ℚ⁺ → ℚ⁺ → ℚ⁺
 (q + r) .rational = q .rational ℚ.+ r .rational
-(q + r) .positive = ℚ.positive (ℚ.+-mono-< (ℚ.positive⁻¹ (q .positive)) (ℚ.positive⁻¹ (r .positive)))
+(q + r) .positive = ℚ.positive (ℚ.+-mono-< (ℚ.positive⁻¹ (q .rational) {{q .positive}}) (ℚ.positive⁻¹ (r .rational) {{r .positive}}))
 
 _*_ : ℚ⁺ → ℚ⁺ → ℚ⁺
 (q * r) .rational = q .rational ℚ.* r .rational
 (q * r) .positive =
     ℚ.positive (ℚ.≤-<-trans (ℚ.≤-reflexive (ℚ.≃-sym (ℚ.*-zeroʳ (q .rational))))
-                           (ℚ.*-monoʳ-<-pos {q .rational} (q .positive) (ℚ.positive⁻¹ {r .rational} (r .positive))))
+                           (ℚ.*-monoʳ-<-pos (q .rational) {{q .positive}} (ℚ.positive⁻¹ (r .rational) {{r .positive}})))
 
 positive⇒nonzero : ∀ {p} → ℚ.Positive p → ℕ.NonZero (ℤ.∣ ↥ p ∣)
-positive⇒nonzero {ℚ.mkℚᵘ (+_ (suc n)) denominator-1} +ve = tt
+positive⇒nonzero {ℚ.mkℚᵘ (+_ (suc n)) denominator-1} +ve = ?
 
-1/-positive : ∀ p → (+ve : ℚ.Positive p) → ℚ.Positive (ℚ.1/_ p {positive⇒nonzero {p} +ve})
-1/-positive (ℚ.mkℚᵘ (+_ (suc n)) d) tt = tt
+1/-positive : ∀ p → (+ve : ℚ.Positive p) → ℚ.Positive (ℚ.1/_ p {{positive⇒nonzero {p} +ve}})
+1/-positive (ℚ.mkℚᵘ (+_ (suc n)) d) _ = ? 
 
 1/_ : ℚ⁺ → ℚ⁺
-(1/ q) .rational = ℚ.1/_ (q .rational) {positive⇒nonzero {q .rational} (q .positive)}
+(1/ q) .rational = ℚ.1/_ (q .rational) {{positive⇒nonzero {q .rational} (q .positive)}}
 (1/ q) .positive = 1/-positive (q .rational) (q .positive)
 
 ½ : ℚ⁺
 ½ .rational = ℚ.½
-½ .positive = tt
+½ .positive = ?
 
 1ℚ⁺ : ℚ⁺
 1ℚ⁺ .rational = 1ℚ
-1ℚ⁺ .positive = tt
+1ℚ⁺ .positive = ?
 
 _/2 : ℚ⁺ → ℚ⁺
 q /2 = ½ * q
@@ -151,9 +151,13 @@ x ≥ y = y ≤ x
 ≤-<-trans : Trans _≤_ _<_ _<_
 ≤-<-trans (r≤r i≤j) (r<r j<k) = r<r (ℚ.≤-<-trans i≤j j<k)
 
+<-asym : {p q : ℚ⁺} -> p .rational < q .rational -> ¬ q .rational < p .rational
+<-asym p<q = ?
+
 module ≤-Reasoning where
   open import Relation.Binary.Reasoning.Base.Triple
     ≤-isPreorder
+    <-asym
     <-trans
     <-resp-≃
     <⇒≤

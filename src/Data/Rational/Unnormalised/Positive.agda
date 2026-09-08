@@ -152,7 +152,7 @@ x ≥ y = y ≤ x
 ≤-<-trans (r≤r i≤j) (r<r j<k) = r<r (ℚ.≤-<-trans i≤j j<k)
 
 <-asym : {p q : ℚ⁺} -> p < q -> ¬ q < p
-<-asym p<q = {!!}
+<-asym {p} {q} (r<r p<q) (r<r qᵣ<ꟴpᵣ) =  ℚ.<-asym {p .rational} {q .rational} p<q qᵣ<ꟴpᵣ
 
 module ≤-Reasoning where
   open import Relation.Binary.Reasoning.Base.Triple
@@ -236,7 +236,8 @@ q ⊔ r with q ≤? r
 +-mono-≤ (r≤r x≤y) (r≤r u≤v) = r≤r (ℚ.+-mono-≤ x≤y u≤v)
 
 +-increasing : ∀ {q r} → q ≤ q + r
-+-increasing {q}{r} = r≤r (ℚ.p≤p+q (q .rational) (r .rational) {{ℚ.positive⇒nonNegative {r .rational} (r .positive)}})
++-increasing {q}{r}
+  = r≤r (ℚ.p≤p+q (q .rational) (r .rational) {{ℚ.positive⇒nonNegative {r .rational} (r .positive)}})
 
 -- private
 --   blah : ∀ {q r} → q ℚ.≠ r → q ℚ.≤ r → q ℚ.< r
@@ -457,7 +458,11 @@ fromℕ n = ℚ.mkℚᵘ (+ n) 0
 
 floor-lower : ∀ q → fromℕ (floor q) ℚ.≤ fog q
 floor-lower ⟨ ℚ.mkℚᵘ (+ n) d-1 , _ ⟩ =
-  ℚ.*≤* (ℤ.≤-trans (ℤ.≤-reflexive (ℤ.+◃n≡+n _)) (ℤ.≤-trans (ℤ.+≤+ (ℕ.≤-trans (m/n*n≤m n (suc d-1)) (ℕ.≤-reflexive (sym (ℕ.*-identityʳ n))))) (ℤ.≤-reflexive (sym (ℤ.+◃n≡+n _)))))
+  ℚ.*≤*
+    (ℤ.≤-trans (ℤ.≤-reflexive (ℤ.+◃n≡+n _))
+      (ℤ.≤-trans (ℤ.+≤+ (ℕ.≤-trans (m/n*n≤m n (suc d-1))
+        (ℕ.≤-reflexive (sym (ℕ.*-identityʳ n)))))
+      (ℤ.≤-reflexive (sym (ℤ.+◃n≡+n _)))))
 
 -- floor-upper : ∀ q → fog q ℚ.< fromℕ (suc (floor q))
 -- floor-upper ⟨ ℚ.mkℚᵘ (+ n) d-1 , _ ⟩ = ℚ.*<* {!!}

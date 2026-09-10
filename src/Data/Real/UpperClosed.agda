@@ -210,8 +210,8 @@ module closedness where
 
   p<q⇒0<q-p : ∀ {p q} → p ℚ.< q → 0ℚ ℚ.< q ℚ.- p
   p<q⇒0<q-p {p} {q} p<q = begin-strict
-    0ℚ       ≈⟨ ℚ.≃-sym (ℚ.+-inverseʳ p) ⟩
-    p ℚ.- p  <⟨ ℚ.+-monoˡ-< (ℚ.- p) p<q ⟩
+    0ℚ       ≃⟨ ℚ.≃-sym (ℚ.+-inverseʳ p) ⟩
+    p ℚ.- p  <⟨  ℚ.+-monoˡ-< (ℚ.- p) p<q ⟩
     q ℚ.- p  ∎ where open ℚ.≤-Reasoning
 
   closed₁ : ∀ a b → (∀ ε → ε ℚ.> 0ℚ → a ℚ.≤ b ℚ.+ ε) → a ℚ.≤ b
@@ -220,16 +220,16 @@ module closedness where
   ... | no ¬a≤b with ℚ.≰⇒> ¬a≤b
   ... | b<a = begin
                  a
-                   ≈⟨ solve 1 (λ a → a := con 2ℚ :* a :- a) ℚ.≃-refl a ⟩
+                   ≃⟨ solve 1 (λ a → a := con 2ℚ :* a :- a) ℚ.≃-refl a ⟩
                  2ℚ ℚ.* a ℚ.- a
                    ≤⟨ mid ⟩
                  2ℚ ℚ.* (b ℚ.+ (a ℚ.- b) ℚ.* ℚ.½) ℚ.- a
-                   ≈⟨ solve 3 (λ a b c → con 2ℚ :* (b :+ (a :- b) :* c) :- a := con 2ℚ :* b :+ (a :- b) :* (con 2ℚ :* c) :- a)
+                   ≃⟨ solve 3 (λ a b c → con 2ℚ :* (b :+ (a :- b) :* c) :- a := con 2ℚ :* b :+ (a :- b) :* (con 2ℚ :* c) :- a)
                         ℚ.≃-refl a b ℚ.½ ⟩
                  2ℚ ℚ.* b ℚ.+ (a ℚ.- b) ℚ.* (2ℚ ℚ.* ℚ.½) ℚ.- a
-                   ≈⟨ ℚ.+-congˡ (ℚ.- a) (ℚ.+-congʳ (2ℚ ℚ.* b) (ℚ.*-cong (ℚ.≃-refl {a ℚ.- b}) eq)) ⟩
+                   ≃⟨ ℚ.+-congˡ (ℚ.- a) (ℚ.+-congʳ (2ℚ ℚ.* b) (ℚ.*-cong (ℚ.≃-refl {a ℚ.- b}) eq)) ⟩
                  2ℚ ℚ.* b ℚ.+ (a ℚ.- b) ℚ.* 1ℚ ℚ.- a
-                   ≈⟨ solve 2 (λ a b → con 2ℚ :* b :+ (a :- b) :* con 1ℚ :- a := b) ℚ.≃-refl a b ⟩
+                   ≃⟨ solve 2 (λ a b → con 2ℚ :* b :+ (a :- b) :* con 1ℚ :- a := b) ℚ.≃-refl a b ⟩
                  b
                ∎
     where
@@ -237,16 +237,16 @@ module closedness where
      open ℚSolver.+-*-Solver
 
      foop : 0ℚ ℚ.< (a ℚ.- b) ℚ.* ℚ.½
-     foop = ℚ.≤-<-trans (ℚ.≤-reflexive (ℚ.*≡* refl)) (ℚ.*-monoˡ-<-pos {ℚ.½} tt (p<q⇒0<q-p b<a))
+     foop = ℚ.≤-<-trans (ℚ.≤-reflexive (ℚ.*≡* refl)) (ℚ.*-monoˡ-<-pos ℚ.½ (p<q⇒0<q-p b<a))
 
      mid : 2ℚ ℚ.* a ℚ.- a ℚ.≤ 2ℚ ℚ.* (b ℚ.+ (a ℚ.- b) ℚ.* ℚ.½) ℚ.- a
-     mid = ℚ.+-monoˡ-≤ (ℚ.- a) (ℚ.*-monoʳ-≤-nonNeg {2ℚ} tt (h ((a ℚ.- b) ℚ.* ℚ.½) foop))
+     mid = ℚ.+-monoˡ-≤ (ℚ.- a) (ℚ.*-monoʳ-≤-nonNeg 2ℚ (h ((a ℚ.- b) ℚ.* ℚ.½) foop))
 
   closed' : ∀ a b → (∀ ε → a ℚ.≤ fog (b ℚ⁺.+ ε)) → a ℚ.≤ fog b
   closed' a b h =
     closed₁ a (fog b) λ ε ε>0 → begin
                                  a                         ≤⟨ h (gof ε ε>0) ⟩
-                                 fog (b ℚ⁺.+ gof ε ε>0)  ≈⟨ ℚ.*≡* refl ⟩
+                                 fog (b ℚ⁺.+ gof ε ε>0)  ≃⟨ ℚ.*≡* refl ⟩
                                  fog b ℚ.+ ε ∎
       where open ℚ.≤-Reasoning
 
@@ -277,13 +277,14 @@ rational-alt r .closed {ε} = {!!}
 module binary-op (_⚈_ : ℚ⁺ → ℚ⁺ → ℚ⁺) (⚈-comm : Commutative ℚ⁺._≃_ _⚈_) where
 
   _⚈ℝ_ : ℝᵘ → ℝᵘ → ℝᵘ
-  (x ⚈ℝ y) .contains q = ∀ s → Σ[ q₁ ∈ ℚ⁺ ] Σ[ q₂ ∈ ℚ⁺ ] (q₁ ⚈ q₂ ℚ⁺.≤ q ℚ⁺.+ s × x .contains q₁ × y .contains q₂)
+  (x ⚈ℝ y) .contains q
+    = ∀ s → Σ[ q₁ ∈ ℚ⁺ ] Σ[ q₂ ∈ ℚ⁺ ] (q₁ ⚈ q₂ ℚ⁺.≤ q ℚ⁺.+ s × x .contains q₁ × y .contains q₂)
   (x ⚈ℝ y) .upper q₁≤q₂ x⚈y s =
     let q'₁ , q'₂ , ineq , x-q'₁ , y-q'₂ = x⚈y s in
-    q'₁ , q'₂ , ℚ⁺.≤-trans ineq (ℚ⁺.+-mono-≤ q₁≤q₂ ℚ⁺.≤-refl) , x-q'₁ , y-q'₂
+    q'₁ , q'₂ , ℚ⁺.≤-trans ineq (ℚ⁺.+-mono-≤ {_} {_} {s} q₁≤q₂ ℚ⁺.≤-refl) , x-q'₁ , y-q'₂
   (x ⚈ℝ y) .closed {q} h s =
     let q₁ , q₂ , ineq , x-q₁ , y-q₂ = h (s ℚ⁺./2) (s ℚ⁺./2) in
-    q₁ , q₂ , ℚ⁺.≤-trans ineq (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc q (s ℚ⁺./2) (s ℚ⁺./2)) (ℚ⁺.+-congʳ q ℚ⁺.half+half))) , x-q₁ , y-q₂
+    q₁ , q₂ , ℚ⁺.≤-trans ineq (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc q (s ℚ⁺./2) (s ℚ⁺./2)) (ℚ⁺.+-congʳ q {_} {s} ℚ⁺.half+half))) , x-q₁ , y-q₂
 
   mono-≤ : _⚈ℝ_ Preserves₂ _≤_ ⟶ _≤_ ⟶ _≤_
   mono-≤ x≤y u≤v .*≤* y⚈v s =
@@ -317,7 +318,7 @@ open binary-op (ℚ⁺._+_) (ℚ⁺.+-comm)
   s , q , ℚ⁺.≤-reflexive (ℚ⁺.+-comm s q) , tt , x-q
 +-identityˡ x .proj₂ .*≤* {q} 0+x =
   x .closed (λ s → let q₁ , q₂ , ineq , tt , x-q₂ = 0+x s in
-                    x .upper (ℚ⁺.≤-trans (ℚ⁺.≤-trans ℚ⁺.+-increasing (ℚ⁺.≤-reflexive (ℚ⁺.+-comm q₂ q₁))) ineq) x-q₂)
+                    x .upper (ℚ⁺.≤-trans (ℚ⁺.≤-trans (ℚ⁺.+-increasing {_} {q₁}) (ℚ⁺.≤-reflexive (ℚ⁺.+-comm q₂ q₁))) ineq) x-q₂)
 
 +-identityʳ : RightIdentity _≃_ 0ℝ _+_
 +-identityʳ x = ≃-trans (+-comm x 0ℝ) (+-identityˡ x)
@@ -334,18 +335,18 @@ open binary-op (ℚ⁺._+_) (ℚ⁺.+-comm)
        (q₁ ℚ⁺.+ q₃) ℚ⁺.+ q₄
          ≈⟨ ℚ⁺.+-assoc q₁ q₃ q₄ ⟩
        q₁ ℚ⁺.+ (q₃ ℚ⁺.+ q₄)
-         ≤⟨ ℚ⁺.+-mono-≤ ℚ⁺.≤-refl q₃+q₄≤q₂+s/2 ⟩
+         ≤⟨ ℚ⁺.+-mono-≤ {q₁} ℚ⁺.≤-refl q₃+q₄≤q₂+s/2 ⟩
        q₁ ℚ⁺.+ (q₂ ℚ⁺.+ s ℚ⁺./2)
          ≈⟨ ℚ⁺.≃-sym (ℚ⁺.+-assoc q₁ q₂ (s ℚ⁺./2)) ⟩
        (q₁ ℚ⁺.+ q₂) ℚ⁺.+ s ℚ⁺./2
-         ≤⟨ ℚ⁺.+-mono-≤ q₁+q₂≤q+s/2 ℚ⁺.≤-refl ⟩
+         ≤⟨ ℚ⁺.+-mono-≤ {_} {_} {{!!}} q₁+q₂≤q+s/2 ℚ⁺.≤-refl ⟩
        (q ℚ⁺.+ s ℚ⁺./2) ℚ⁺.+ s ℚ⁺./2
          ≈⟨ ℚ⁺.+-assoc q (s ℚ⁺./2) (s ℚ⁺./2) ⟩
        q ℚ⁺.+ (s ℚ⁺./2 ℚ⁺.+ s ℚ⁺./2)
-         ≈⟨ ℚ⁺.+-congʳ q ℚ⁺.half+half ⟩
+         ≈⟨ ℚ⁺.+-congʳ q {_} {s} ℚ⁺.half+half ⟩
        q ℚ⁺.+ s
      ∎) ,
-     (λ s₁ → q₁ , q₃ , ℚ⁺.+-increasing , x-q₁ , y-q₃) , z-q₄
+     (λ s₁ → q₁ , q₃ , ℚ⁺.+-increasing {_} {s₁} , x-q₁ , y-q₃) , z-q₄
    where open ℚ⁺.≤-Reasoning
 +-assoc x y z .proj₂ .*≤* {q} ⟨x+y⟩+z s =
      let q₁ , q₂ , q₁+q₂≤q+s/2 , x+y , z-q₂ = ⟨x+y⟩+z (s ℚ⁺./2) in
@@ -355,7 +356,7 @@ open binary-op (ℚ⁺._+_) (ℚ⁺.+-comm)
        q₃ ℚ⁺.+ (q₄ ℚ⁺.+ q₂)
          ≈⟨ ℚ⁺.≃-sym (ℚ⁺.+-assoc q₃ q₄ q₂) ⟩
        (q₃ ℚ⁺.+ q₄) ℚ⁺.+ q₂
-         ≤⟨ ℚ⁺.+-mono-≤ q₃+q₄≤q₁+s/2 ℚ⁺.≤-refl ⟩
+         ≤⟨ ℚ⁺.+-mono-≤ {_} {_} {q₂} q₃+q₄≤q₁+s/2 ℚ⁺.≤-refl ⟩
        (q₁ ℚ⁺.+ s ℚ⁺./2) ℚ⁺.+ q₂
          ≈⟨ ℚ⁺.+-assoc q₁ (s ℚ⁺./2) q₂ ⟩
        q₁ ℚ⁺.+ (s ℚ⁺./2 ℚ⁺.+ q₂)
@@ -363,15 +364,15 @@ open binary-op (ℚ⁺._+_) (ℚ⁺.+-comm)
        q₁ ℚ⁺.+ (q₂ ℚ⁺.+ s ℚ⁺./2)
          ≈⟨ ℚ⁺.≃-sym (ℚ⁺.+-assoc q₁ q₂ (s ℚ⁺./2)) ⟩
        (q₁ ℚ⁺.+ q₂) ℚ⁺.+ s ℚ⁺./2
-         ≤⟨ ℚ⁺.+-mono-≤ q₁+q₂≤q+s/2 ℚ⁺.≤-refl ⟩
+         ≤⟨ ℚ⁺.+-mono-≤ {_} {_} {{!!}} q₁+q₂≤q+s/2 ℚ⁺.≤-refl ⟩
        (q ℚ⁺.+ s ℚ⁺./2) ℚ⁺.+ s ℚ⁺./2
          ≈⟨ ℚ⁺.+-assoc q (s ℚ⁺./2) (s ℚ⁺./2) ⟩
        q ℚ⁺.+ (s ℚ⁺./2 ℚ⁺.+ s ℚ⁺./2)
-         ≈⟨ ℚ⁺.+-congʳ q ℚ⁺.half+half ⟩
+         ≈⟨ ℚ⁺.+-congʳ q {_} {s} ℚ⁺.half+half ⟩
        q ℚ⁺.+ s
      ∎) ,
      x-q₃ ,
-     λ s₁ → q₄ , q₂ , ℚ⁺.+-increasing , y-q₄ , z-q₂
+     λ s₁ → q₄ , q₂ , ℚ⁺.+-increasing {_} {s₁} , y-q₄ , z-q₂
    where open ℚ⁺.≤-Reasoning
 
 +-increasingʳ : ∀ x y → x ≤ x + y
@@ -440,7 +441,7 @@ open binary-op (ℚ⁺._*_) (ℚ⁺.*-comm)
     ε₁ ℚ⁺.* (1/ ε₁ ℚ⁺.* (ε ℚ⁺.+ s))
   ≈⟨ ℚ⁺.≃-sym (ℚ⁺.*-assoc ε₁ (1/ ε₁) (ε ℚ⁺.+ s)) ⟩
     (ε₁ ℚ⁺.* 1/ ε₁) ℚ⁺.* (ε ℚ⁺.+ s)
-  ≈⟨ ℚ⁺.*-cong (ℚ⁺.*-inverseʳ ε₁) ℚ⁺.≃-refl ⟩
+  ≈⟨ ℚ⁺.*-cong {_} {_} {(ε ℚ⁺.+ s )} (ℚ⁺.*-inverseʳ ε₁) ℚ⁺.≃-refl ⟩
     ℚ⁺.1ℚ⁺ ℚ⁺.* (ε ℚ⁺.+ s)
   ≈⟨ ℚ⁺.*-identityˡ (ε ℚ⁺.+ s) ⟩
     ε ℚ⁺.+ s
@@ -463,7 +464,7 @@ open binary-op (ℚ⁺._*_) (ℚ⁺.*-comm)
 *-identityˡ x .proj₁ .*≤* {ε} x∋ε s =
   ℚ⁺.1ℚ⁺ ,
   ε ,
-  ℚ⁺.≤-trans (ℚ⁺.≤-reflexive (ℚ⁺.*-identityˡ ε)) ℚ⁺.+-increasing ,
+  ℚ⁺.≤-trans (ℚ⁺.≤-reflexive (ℚ⁺.*-identityˡ ε)) (ℚ⁺.+-increasing {_} {s})  ,
   ℚ.≤-refl ,
   x∋ε
 *-identityˡ x .proj₂ .*≤* {ε} 1x∋ε =
@@ -474,7 +475,7 @@ open binary-op (ℚ⁺._*_) (ℚ⁺.*-comm)
       ε₂
     ≈⟨ ℚ⁺.≃-sym (ℚ⁺.*-identityˡ ε₂) ⟩
       ℚ⁺.1ℚ⁺ ℚ⁺.* ε₂
-    ≤⟨ ℚ⁺.*-mono-≤ (ℚ⁺.r≤r 1≤ε₁) (ℚ⁺.≤-refl {ε₂}) ⟩
+    ≤⟨ ℚ⁺.*-mono-≤ {_} {{!ε!}} (ℚ⁺.r≤r 1≤ε₁) (ℚ⁺.≤-refl {ε₂}) ⟩
       ε₁ ℚ⁺.* ε₂
     ≤⟨ ε₁ε₂≤ε+s ⟩
       ε ℚ⁺.+ s
@@ -680,13 +681,13 @@ rational-+ q r 0≤q 0≤r .proj₁ .*≤* {ε} q+r≤ε s =
   ℚ⁺.nn+pos r (s /2) 0≤r ,
   ℚ⁺.r≤r (begin
               q ℚ.+ ℚ⁺.fog (s /2) ℚ.+ (r ℚ.+ ℚ⁺.fog (s /2))
-            ≈⟨ ℚ-interchange q (ℚ⁺.fog (s /2)) r (ℚ⁺.fog (s /2)) ⟩
+            ≃⟨ ℚ-interchange q (ℚ⁺.fog (s /2)) r (ℚ⁺.fog (s /2)) ⟩
               (q ℚ.+ r) ℚ.+ (ℚ⁺.fog (s /2) ℚ.+ ℚ⁺.fog (s /2))
-            ≈⟨ ℚ.+-congʳ (q ℚ.+ r) (ℚ.≃-sym (ℚ⁺.+-fog (s /2) (s /2))) ⟩
+            ≃⟨ ℚ.+-congʳ (q ℚ.+ r) (ℚ.≃-sym (ℚ⁺.+-fog (s /2) (s /2))) ⟩
               (q ℚ.+ r) ℚ.+ ℚ⁺.fog (s /2 ℚ⁺.+ s /2)
             ≤⟨ ℚ.+-mono-≤ q+r≤ε (ℚ⁺.fog-mono (ℚ⁺.≤-reflexive (ℚ⁺.half+half {s}))) ⟩
               ℚ⁺.fog ε ℚ.+ ℚ⁺.fog s
-            ≈⟨ ℚ⁺.+-fog ε s ⟩
+            ≃⟨ ℚ⁺.+-fog ε s ⟩
               ℚ⁺.fog (ε ℚ⁺.+ s)
            ∎) ,
   ℚ⁺.q≤nn+pos q (s /2) ,
@@ -699,7 +700,7 @@ rational-+ q r 0≤q 0≤r .proj₂ .*≤* {ε} q+r∋ε =
     q ℚ.+ r
   ≤⟨ ℚ.+-mono-≤ q≤ε₁ r≤ε₂ ⟩
     ℚ⁺.fog ε₁ ℚ.+ ℚ⁺.fog ε₂
-  ≈⟨ ℚ.≃-sym (ℚ⁺.+-fog ε₁ ε₂) ⟩
+  ≃⟨ ℚ.≃-sym (ℚ⁺.+-fog ε₁ ε₂) ⟩
     ℚ⁺.fog (ε₁ ℚ⁺.+ ε₂)
   ≤⟨ ℚ⁺.fog-mono ε₁+ε₂≤ε+s ⟩
     ℚ⁺.fog (ε ℚ⁺.+ s)
@@ -729,7 +730,7 @@ rational⁺-* q r .proj₂ .*≤* {ε} qr∋ε =
     ℚ⁺.fog q ℚ.* ℚ⁺.fog ε₂
   ≤⟨ ℚ.*-monoˡ-≤-pos (ℚ.positive (ℚ⁺.fog-positive ε₂)) q≤ε₁ ⟩
     ℚ⁺.fog ε₁ ℚ.* ℚ⁺.fog ε₂
-  ≈⟨ ℚ.≃-sym (ℚ⁺.*-fog ε₁ ε₂) ⟩
+  ≃⟨ ℚ.≃-sym (ℚ⁺.*-fog ε₁ ε₂) ⟩
     ℚ⁺.fog (ε₁ ℚ⁺.* ε₂)
   ≤⟨ ℚ⁺.fog-mono ε₁ε₂≤ε+s ⟩
     ℚ⁺.fog (ε ℚ⁺.+ s)
@@ -981,10 +982,10 @@ _⊓_ : ℝᵘ → ℝᵘ → ℝᵘ
 ... | inj₂ p = inj₂ (y .upper (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc _ _ _) (ℚ⁺.+-congʳ _ (ℚ⁺.half+half {s})))) p)
 
 ⊓-lower-1 : ∀ {x y} → (x ⊓ y) ≤ x
-⊓-lower-1 {x}{y} .*≤* x-q s = inj₁ (x .upper ℚ⁺.+-increasing x-q)
+⊓-lower-1 {x}{y} .*≤* x-q s = inj₁ (x .upper (ℚ⁺.+-increasing {_} {{!!}}) x-q)
 
 ⊓-lower-2 : ∀ {x y} → (x ⊓ y) ≤ y
-⊓-lower-2 {x}{y} .*≤* y-q s = inj₂ (y .upper ℚ⁺.+-increasing y-q)
+⊓-lower-2 {x}{y} .*≤* y-q s = inj₂ (y .upper (ℚ⁺.+-increasing {_} {s}) y-q)
 
 ⊓-greatest : ∀ {x y z} → x ≤ y → x ≤ z → x ≤ (y ⊓ z)
 ⊓-greatest {x} x≤y x≤z .*≤* y⊓z-q = x .closed λ s → [ x≤y .*≤* , x≤z .*≤* ] (y⊓z-q s)
@@ -1042,13 +1043,13 @@ inf : (I : Set) → (I → ℝᵘ) → ℝᵘ
 inf I S .contains q = ∀ s → Σ[ i ∈ I ] (S i .contains (q ℚ⁺.+ s))
 inf I S .upper q≤r contains-q s =
   let i , p = contains-q s in
-  i , S i .upper (ℚ⁺.+-mono-≤ q≤r ℚ⁺.≤-refl) p
+  i , S i .upper (ℚ⁺.+-mono-≤ {_} {_} {s} q≤r ℚ⁺.≤-refl) p
 inf I S .closed {ε} h s =
   let i , p = h (s /2) (s /2) in
-  i , S i .upper (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc ε (s /2) (s /2)) (ℚ⁺.+-congʳ ε ℚ⁺.half+half))) p
+  i , S i .upper (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc ε (s /2) (s /2)) (ℚ⁺.+-congʳ ε (ℚ⁺.half+half {s})))) p
 
 inf-lower : ∀ {I S} i → inf I S ≤ S i
-inf-lower {I}{S} i .*≤* {ε} Si∋ε s = i , S i .upper ℚ⁺.+-increasing Si∋ε
+inf-lower {I}{S} i .*≤* {ε} Si∋ε s = i , S i .upper (ℚ⁺.+-increasing {_} {s}) Si∋ε
 
 inf-greatest : ∀ {I S x} → (∀ i → x ≤ S i) → x ≤ inf I S
 inf-greatest {I}{S}{x} h .*≤* {ε} infIS∋ε =
@@ -1088,7 +1089,7 @@ inf-+ {I₁}{I₂}{S₁}{S₂} .proj₁ .*≤* {ε} ⊓₁+⊓₂∋ε s =
           ε ℚ⁺.+ (s /2 ℚ⁺.+ s /2)
         ≈⟨ ℚ⁺.+-congʳ ε (ℚ⁺.half+half {s}) ⟩
           ε ℚ⁺.+ s
-        ≤⟨ ℚ⁺.+-increasing ⟩
+        ≤⟨ ℚ⁺.+-increasing {_} {r} ⟩
           ε ℚ⁺.+ s ℚ⁺.+ r
         ∎) ,
         S₁i₁∋ε₁+ ,
@@ -1197,3 +1198,4 @@ sqrt-correct x .proj₂ .*≤* {q} √x*√x∋q =
   let q₁ , q₂ , q₁q₂≤q+ε , √x∋q₁ , √y∋q₂ = √x*√x∋q ε in
   {!√x∋q₁ (ε /2)!} -- FIXME : todo; might need to work out which of q₁ or q₂ is greater
 -}
+

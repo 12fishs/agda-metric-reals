@@ -237,7 +237,7 @@ q ⊔ r with q ≤? r
 
 +-increasing : ∀ {q r} → q ≤ q + r
 +-increasing {q}{r}
-  = r≤r (ℚ.p≤p+q (q .rational) (r .rational) {{ℚ.positive⇒nonNegative {r .rational} (r .positive)}})
+  = r≤r (ℚ.p≤p+q (q .rational) (r .rational) {{ℚ.pos⇒nonNeg (r .rational) {{r .positive}}}})
 
 -- private
 --   blah : ∀ {q r} → q ℚ.≠ r → q ℚ.≤ r → q ℚ.< r
@@ -264,8 +264,8 @@ postulate -- FIXME
 
 *-mono-≤ : _*_ Preserves₂ _≤_ ⟶ _≤_ ⟶ _≤_
 *-mono-≤ {x}{y}{u}{v} (r≤r x≤y) (r≤r u≤v) =
-  r≤r (ℚ.≤-trans (ℚ.*-monoʳ-≤-pos {x .rational} (x .positive) u≤v)
-                 (ℚ.*-monoˡ-≤-pos (v .positive) x≤y))
+  r≤r (ℚ.≤-trans (ℚ.*-monoʳ-≤-nonNeg (x .rational) {{ℚ.pos⇒nonNeg (x .rational) {{x .positive}}}} u≤v)
+                 (ℚ.*-monoˡ-≤-nonNeg (v .rational) {{ℚ.pos⇒nonNeg (v .rational) {{v .positive}}}} x≤y))
 
 *-mono-< : _*_ Preserves₂ _<_ ⟶ _<_ ⟶ _<_
 *-mono-< {x}{y}{u}{v} (r<r x<y) (r<r u<v) =
@@ -323,7 +323,7 @@ postulate -- FIXME
     1/ r
   ≈⟨ ≃-sym (*-identityˡ (1/ r)) ⟩
     1ℚ⁺ * 1/ r
-  ≈⟨ ≃-sym (*-cong (*-inverseˡ q) ≃-refl) ⟩
+  ≈⟨ ≃-sym (*-cong {_} {_} {1/ r} (*-inverseˡ q) ≃-refl) ⟩
     (1/ q * q) * 1/ r
   ≤⟨ *-mono-≤ (*-mono-≤ (≤-refl {1/ q}) q≤r) (≤-refl {1/ r}) ⟩
     (1/ q * r) * 1/ r
@@ -406,7 +406,7 @@ half-≤ q =
     q /2
       ≈⟨ ≃-refl ⟩
     ½ * q
-      ≤⟨ *-mono-≤ {½} {1ℚ⁺} (r≤r (ℚ.*≤* (ℤ.+≤+ (ℕ.s≤s ℕ.z≤n)))) ≤-refl ⟩
+      ≤⟨ *-mono-≤ {½} {1ℚ⁺} {q} (r≤r (ℚ.*≤* (ℤ.+≤+ (ℕ.s≤s ℕ.z≤n)))) ≤-refl ⟩
     1ℚ⁺ * q
       ≈⟨ *-identityˡ q ⟩
     q

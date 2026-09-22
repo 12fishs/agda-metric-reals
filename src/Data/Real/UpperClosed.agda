@@ -475,7 +475,7 @@ open binary-op (ℚ⁺._*_) (ℚ⁺.*-comm)
       ε₂
     ≈⟨ ℚ⁺.≃-sym (ℚ⁺.*-identityˡ ε₂) ⟩
       ℚ⁺.1ℚ⁺ ℚ⁺.* ε₂
-    ≤⟨ ℚ⁺.*-mono-≤ {_} {{!ε!}} (ℚ⁺.r≤r 1≤ε₁) (ℚ⁺.≤-refl {ε₂}) ⟩
+    ≤⟨ ℚ⁺.*-mono-≤ {_} {{!ε !}} (ℚ⁺.r≤r 1≤ε₁) (ℚ⁺.≤-refl {ε₂}) ⟩
       ε₁ ℚ⁺.* ε₂
     ≤⟨ ε₁ε₂≤ε+s ⟩
       ε ℚ⁺.+ s
@@ -513,10 +513,10 @@ open binary-op (ℚ⁺._*_) (ℚ⁺.*-comm)
     (ε ℚ⁺.+ s /2) ℚ⁺.+ s /2
   ≈⟨ ℚ⁺.+-assoc ε (s /2) (s /2) ⟩
     ε ℚ⁺.+ (s /2 ℚ⁺.+ s /2)
-  ≈⟨ ℚ⁺.+-congʳ ε ℚ⁺.half+half ⟩
+  ≈⟨ ℚ⁺.+-congʳ ε {_} {s} ℚ⁺.half+half ⟩
     ε ℚ⁺.+ s
   ∎) ,
-  (λ r → ε₁ , ε₂₁ , ℚ⁺.+-increasing , x∋ε₁ , y∋ε₂₁) ,
+  (λ r → ε₁ , ε₂₁ , ℚ⁺.+-increasing {_} {r} , x∋ε₁ , y∋ε₂₁) ,
   z∋ε₂₂
   where open ℚ⁺.≤-Reasoning
 *-assoc x y z .proj₂ .*≤* {ε} [xy]z∋ε s =
@@ -542,11 +542,11 @@ open binary-op (ℚ⁺._*_) (ℚ⁺.*-comm)
     (ε ℚ⁺.+ s /2) ℚ⁺.+ s /2
   ≈⟨ ℚ⁺.+-assoc ε (s /2) (s /2) ⟩
     ε ℚ⁺.+ (s /2 ℚ⁺.+ s /2)
-  ≈⟨ ℚ⁺.+-congʳ ε ℚ⁺.half+half ⟩
+  ≈⟨ ℚ⁺.+-congʳ ε {_} {s} ℚ⁺.half+half ⟩
     ε ℚ⁺.+ s
   ∎) ,
   x∋ε₁₁ ,
-  λ r → ε₁₂ , ε₂ , ℚ⁺.+-increasing , y∋ε₁₂ , z∋ε₂
+  λ r → ε₁₂ , ε₂ , ℚ⁺.+-increasing {_} {r} , y∋ε₁₂ , z∋ε₂
   where open ℚ⁺.≤-Reasoning
 
 *-distribʳ-+ : ∀ x y z → ((y + z) * x) ≃ ((y * x) + (z * x))
@@ -575,7 +575,7 @@ open binary-op (ℚ⁺._*_) (ℚ⁺.*-comm)
   ≈⟨ ℚ⁺.+-congʳ ε (ℚ⁺.half+half {s}) ⟩
     ε ℚ⁺.+ s
   ∎) ,
-  (λ r → ε₁₁ , ε₂₁ , ℚ⁺.+-increasing , y∋ε₁₁ , z∋ε₂₁) ,
+  (λ r → ε₁₁ , ε₂₁ , ℚ⁺.+-increasing {_} {r} , y∋ε₁₁ , z∋ε₂₁) ,
   x∋⊓ ε₁₂ ε₂₂ x∋ε₁₂ x∋ε₂₂
   where open ℚ⁺.≤-Reasoning
         x∋⊓ : ∀ ε₁ ε₂ → x .contains ε₁ → x .contains ε₂ → x .contains (ε₁ ℚ⁺.⊓ ε₂)
@@ -608,8 +608,8 @@ open binary-op (ℚ⁺._*_) (ℚ⁺.*-comm)
   ≈⟨ ℚ⁺.+-congʳ ε (ℚ⁺.half+half {s}) ⟩
     ε ℚ⁺.+ s
   ∎) ,
-  (λ r → ε₁₁ , ε₂ , ℚ⁺.+-increasing , y∋ε₁₁ , x∋ε₂) ,
-  (λ r → ε₁₂ , ε₂ , ℚ⁺.+-increasing , z∋ε₁₂ , x∋ε₂)
+  (λ r → ε₁₁ , ε₂ , ℚ⁺.+-increasing {_} {r} , y∋ε₁₁ , x∋ε₂) ,
+  (λ r → ε₁₂ , ε₂ , ℚ⁺.+-increasing {_} {r} , z∋ε₁₂ , x∋ε₂)
   where open ℚ⁺.≤-Reasoning
 
 *-distribˡ-+ : ∀ x y z → (x * (y + z)) ≃ ((x * y) + (x * z))
@@ -715,7 +715,7 @@ rational⁺-* q r .proj₁ .*≤* {ε} qr≤ε s =
     q ℚ⁺.* r
   ≤⟨ ℚ⁺.r≤r qr≤ε ⟩
     ε
-  ≤⟨ ℚ⁺.+-increasing ⟩
+  ≤⟨ ℚ⁺.+-increasing {_} {s} ⟩
     ε ℚ⁺.+ s
   ∎) ,
   ℚ.≤-refl ,
@@ -832,7 +832,7 @@ _⊝_ : ℝᵘ → ℝᵘ → ℝᵘ
 (x ⊝ y) .contains ε =
   ∀ ε' → y .contains ε' → x .contains (ε ℚ⁺.+ ε')
 (x ⊝ y) .upper ε₁≤ε₂ h ε' y∋ε' =
-  x .upper (ℚ⁺.+-mono-≤ ε₁≤ε₂ ℚ⁺.≤-refl) (h ε' y∋ε')
+  x .upper (ℚ⁺.+-mono-≤ {_} {_} {ε'} ε₁≤ε₂ ℚ⁺.≤-refl) (h ε' y∋ε')
 (x ⊝ y) .closed {ε} h ε' y∋ε' =
   x .closed λ s → x .upper (ℚ⁺.≤-reflexive (eq s)) (h s ε' y∋ε')
   where open import Algebra.Solver.CommutativeSemigroup (ℚ⁺.+-commutativeSemigroup)
@@ -852,7 +852,7 @@ residual-2 {x} {y} {z} x≤y+z .*≤* {ε} z∋ε ε' y∋ε' =
   x≤y+z .*≤* λ s →
   ε' ,
   ε ,
-  ℚ⁺.≤-trans (ℚ⁺.≤-reflexive (ℚ⁺.+-comm ε' ε)) ℚ⁺.+-increasing ,
+  ℚ⁺.≤-trans (ℚ⁺.≤-reflexive (ℚ⁺.+-comm ε' ε)) (ℚ⁺.+-increasing {_} {s}) ,
   y∋ε' ,
   z∋ε
 
@@ -860,7 +860,7 @@ residual-2 {x} {y} {z} x≤y+z .*≤* {ε} z∋ε ε' y∋ε' =
 -- FIXME: this is the old truncating subtraction, just for rationals
 _⊖_ : ℝᵘ → ℚ⁺ → ℝᵘ
 (x ⊖ r) .contains q = x .contains (q ℚ⁺.+ r)
-(x ⊖ r) .upper q₁≤q₂ = x .upper (ℚ⁺.+-mono-≤ q₁≤q₂ ℚ⁺.≤-refl)
+(x ⊖ r) .upper q₁≤q₂ = x .upper (ℚ⁺.+-mono-≤ {_} {_} {r} q₁≤q₂ ℚ⁺.≤-refl)
 (x ⊖ r) .closed {q} h =
   x .closed (λ s → x .upper (ℚ⁺.≤-reflexive (prove 3 ((a ⊕ b) ⊕ c) ((a ⊕ c) ⊕ b) (q ∷ s ∷ r ∷ []))) (h s))
   where open import Algebra.Solver.CommutativeSemigroup (ℚ⁺.+-commutativeSemigroup)
@@ -870,7 +870,7 @@ _⊖_ : ℝᵘ → ℚ⁺ → ℝᵘ
 ⊖-iso1 {x}{q}{y} x⊖q≤y .*≤* {ε} h =
   x .closed λ s →
   let ε₁ , ε₂ , ε₁+ε₂≤ε+s , y-ε₁ , q≤ε₂ = h s in
-  x .upper ε₁+ε₂≤ε+s (x .upper (ℚ⁺.+-mono-≤ ℚ⁺.≤-refl (ℚ⁺.r≤r q≤ε₂)) (x⊖q≤y .*≤* y-ε₁))
+  x .upper ε₁+ε₂≤ε+s (x .upper (ℚ⁺.+-mono-≤ {{!!}} {_} {{!!}} {{!!}} ℚ⁺.≤-refl (ℚ⁺.r≤r q≤ε₂)) (x⊖q≤y .*≤* y-ε₁))
 
 ⊖-iso1-0 : ∀ {x q} → (x ⊖ q) ≤ 0ℝ → x ≤ rational+ q
 ⊖-iso1-0 {x}{q} x⊖q≤0 =

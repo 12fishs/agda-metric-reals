@@ -339,7 +339,7 @@ open binary-op (ℚ⁺._+_) (ℚ⁺.+-comm)
        q₁ ℚ⁺.+ (q₂ ℚ⁺.+ s ℚ⁺./2)
          ≈⟨ ℚ⁺.≃-sym (ℚ⁺.+-assoc q₁ q₂ (s ℚ⁺./2)) ⟩
        (q₁ ℚ⁺.+ q₂) ℚ⁺.+ s ℚ⁺./2
-         ≤⟨ ℚ⁺.+-mono-≤ {_} {_} {{!!}} q₁+q₂≤q+s/2 ℚ⁺.≤-refl ⟩
+         ≤⟨ ℚ⁺.+-mono-≤ {_} {_} {s ℚ⁺./2} q₁+q₂≤q+s/2 ℚ⁺.≤-refl ⟩
        (q ℚ⁺.+ s ℚ⁺./2) ℚ⁺.+ s ℚ⁺./2
          ≈⟨ ℚ⁺.+-assoc q (s ℚ⁺./2) (s ℚ⁺./2) ⟩
        q ℚ⁺.+ (s ℚ⁺./2 ℚ⁺.+ s ℚ⁺./2)
@@ -364,7 +364,7 @@ open binary-op (ℚ⁺._+_) (ℚ⁺.+-comm)
        q₁ ℚ⁺.+ (q₂ ℚ⁺.+ s ℚ⁺./2)
          ≈⟨ ℚ⁺.≃-sym (ℚ⁺.+-assoc q₁ q₂ (s ℚ⁺./2)) ⟩
        (q₁ ℚ⁺.+ q₂) ℚ⁺.+ s ℚ⁺./2
-         ≤⟨ ℚ⁺.+-mono-≤ {_} {_} {{!!}} q₁+q₂≤q+s/2 ℚ⁺.≤-refl ⟩
+         ≤⟨ ℚ⁺.+-mono-≤ {_} {_} {s ℚ⁺./2} q₁+q₂≤q+s/2 ℚ⁺.≤-refl ⟩
        (q ℚ⁺.+ s ℚ⁺./2) ℚ⁺.+ s ℚ⁺./2
          ≈⟨ ℚ⁺.+-assoc q (s ℚ⁺./2) (s ℚ⁺./2) ⟩
        q ℚ⁺.+ (s ℚ⁺./2 ℚ⁺.+ s ℚ⁺./2)
@@ -475,7 +475,7 @@ open binary-op (ℚ⁺._*_) (ℚ⁺.*-comm)
       ε₂
     ≈⟨ ℚ⁺.≃-sym (ℚ⁺.*-identityˡ ε₂) ⟩
       ℚ⁺.1ℚ⁺ ℚ⁺.* ε₂
-    ≤⟨ ℚ⁺.*-mono-≤ {_} {{!ε !}} (ℚ⁺.r≤r 1≤ε₁) (ℚ⁺.≤-refl {ε₂}) ⟩
+    ≤⟨ ℚ⁺.*-mono-≤ {_} {ε₁} (ℚ⁺.r≤r 1≤ε₁) (ℚ⁺.≤-refl {ε₂}) ⟩
       ε₁ ℚ⁺.* ε₂
     ≤⟨ ε₁ε₂≤ε+s ⟩
       ε ℚ⁺.+ s
@@ -870,7 +870,7 @@ _⊖_ : ℝᵘ → ℚ⁺ → ℝᵘ
 ⊖-iso1 {x}{q}{y} x⊖q≤y .*≤* {ε} h =
   x .closed λ s →
   let ε₁ , ε₂ , ε₁+ε₂≤ε+s , y-ε₁ , q≤ε₂ = h s in
-  x .upper ε₁+ε₂≤ε+s (x .upper (ℚ⁺.+-mono-≤ {{!!}} {_} {{!!}} {{!!}} ℚ⁺.≤-refl (ℚ⁺.r≤r q≤ε₂)) (x⊖q≤y .*≤* y-ε₁))
+  x .upper ε₁+ε₂≤ε+s (x .upper (ℚ⁺.+-mono-≤ {ε₁} {_} {q} {ε₂} ℚ⁺.≤-refl (ℚ⁺.r≤r q≤ε₂)) (x⊖q≤y .*≤* y-ε₁))
 
 ⊖-iso1-0 : ∀ {x q} → (x ⊖ q) ≤ 0ℝ → x ≤ rational+ q
 ⊖-iso1-0 {x}{q} x⊖q≤0 =
@@ -976,13 +976,14 @@ _⊔_ : ℝᵘ → ℝᵘ → ℝᵘ
 _⊓_ : ℝᵘ → ℝᵘ → ℝᵘ
 (x ⊓ y) .contains q = ∀ s → x .contains (q ℚ⁺.+ s) ⊎ y .contains (q ℚ⁺.+ s)
 (x ⊓ y) .upper q₁≤q₂ v s =
-  [ (λ x-q₁+s → inj₁ (x .upper (ℚ⁺.+-mono-≤ q₁≤q₂ ℚ⁺.≤-refl) x-q₁+s)) , (λ y-q₁+s → inj₂ (y .upper (ℚ⁺.+-mono-≤ q₁≤q₂ ℚ⁺.≤-refl) y-q₁+s)) ] (v s)
+  [ (λ x-q₁+s → inj₁ (x .upper (ℚ⁺.+-mono-≤ {_} {_} {s} q₁≤q₂ ℚ⁺.≤-refl) x-q₁+s)) ,
+    (λ y-q₁+s → inj₂ (y .upper (ℚ⁺.+-mono-≤ {_} {_} {s} q₁≤q₂ ℚ⁺.≤-refl) y-q₁+s)) ] (v s)
 (x ⊓ y) .closed h s with h (s /2) (s /2)
-... | inj₁ p = inj₁ (x .upper (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc _ _ _) (ℚ⁺.+-congʳ _ (ℚ⁺.half+half {s})))) p)
+... | inj₁ p = inj₁ (x .upper (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc {!!} {!!} {!!}) (ℚ⁺.+-congʳ {!!} {_} (ℚ⁺.half+half {s})))) p)
 ... | inj₂ p = inj₂ (y .upper (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc _ _ _) (ℚ⁺.+-congʳ _ (ℚ⁺.half+half {s})))) p)
 
 ⊓-lower-1 : ∀ {x y} → (x ⊓ y) ≤ x
-⊓-lower-1 {x}{y} .*≤* x-q s = inj₁ (x .upper (ℚ⁺.+-increasing {_} {{!!}}) x-q)
+⊓-lower-1 {x}{y} .*≤* x-q s = inj₁ (x .upper (ℚ⁺.+-increasing {_} {s}) x-q)
 
 ⊓-lower-2 : ∀ {x y} → (x ⊓ y) ≤ y
 ⊓-lower-2 {x}{y} .*≤* y-q s = inj₂ (y .upper (ℚ⁺.+-increasing {_} {s}) y-q)

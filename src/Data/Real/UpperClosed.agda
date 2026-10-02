@@ -651,7 +651,9 @@ open binary-op (ℚ⁺._*_) (ℚ⁺.*-comm)
 isSemiringWithoutAnnihilatingZero : IsSemiringWithoutAnnihilatingZero _≃_ _+_ _*_ 0ℝ 1ℝ
 isSemiringWithoutAnnihilatingZero =
   record { +-isCommutativeMonoid = +-0-isCommutativeMonoid
-         ; *-isMonoid            = *-1-isMonoid
+         ; *-cong                = *-cong
+         ; *-assoc               = *-assoc
+         ; *-identity            = *-identity
          ; distrib               = *-distrib-+ }
 
 ------------------------------------------------------------------------------
@@ -888,20 +890,20 @@ _⊖_ : ℝᵘ → ℚ⁺ → ℝᵘ
 
 ⊖-iso2 : ∀ {x q y} → x ≤ (y + rational+ q) → (x ⊖ q) ≤ y
 ⊖-iso2 {x}{q}{y} x≤y+q .*≤* {ε} y-ε =
-  x≤y+q .*≤* (λ s → ε , q , ℚ⁺.+-increasing , y-ε , ℚ.≤-refl)
+  x≤y+q .*≤* (λ s → ε , q , (ℚ⁺.+-increasing {_} {s}) , y-ε , ℚ.≤-refl)
 
 ⊖-eval : ∀ {x q} → x ≤ ((x ⊖ q) + rational+ q)
 ⊖-eval {x}{q} = ⊖-iso1 ≤-refl
 
 ⊖-mono : ∀ {x y q₁ q₂} → x ≤ y → q₂ ℚ⁺.≤ q₁ → (x ⊖ q₁) ≤ (y ⊖ q₂)
-⊖-mono {x} x≤y q₂≤q₁ .*≤* y-q+q₂ = x .upper (ℚ⁺.+-mono-≤ ℚ⁺.≤-refl q₂≤q₁) (x≤y .*≤* y-q+q₂)
+⊖-mono {x} x≤y q₂≤q₁ .*≤* {q} y-q+q₂ = x .upper (ℚ⁺.+-mono-≤ {q} ℚ⁺.≤-refl q₂≤q₁) (x≤y .*≤* y-q+q₂)
 
 ⊖-0 : ∀ r → (rational+ r ⊖ r) ≤ 0ℝ
 ⊖-0 r .*≤* {q} tt =
-   ℚ⁺.fog-mono {r} {q ℚ⁺.+ r} (ℚ⁺.≤-trans ℚ⁺.+-increasing (ℚ⁺.≤-reflexive (ℚ⁺.+-comm r q)))
+   ℚ⁺.fog-mono {r} {q ℚ⁺.+ r} (ℚ⁺.≤-trans (ℚ⁺.+-increasing {_} {q}) (ℚ⁺.≤-reflexive (ℚ⁺.+-comm r q)))
 
 ⊖-≤ : ∀ {x ε} → (x ⊖ ε) ≤ x
-⊖-≤ {x} .*≤* = x .upper ℚ⁺.+-increasing
+⊖-≤ {x} {ε} .*≤* = x .upper (ℚ⁺.+-increasing {_} {ε})
 
 -- FIXME: this is the same proof twice
 -- FIXME: in the light of the above observation that ⊖ is a Day exponential, this is currying
@@ -920,7 +922,7 @@ _⊖_ : ℝᵘ → ℚ⁺ → ℝᵘ
     (ε₁ ℚ⁺.+ q) ℚ⁺.+ (ε₂ ℚ⁺.+ r)
       ≈⟨ ℚ⁺-interchange ε₁ q ε₂ r ⟩
     (ε₁ ℚ⁺.+ ε₂) ℚ⁺.+ (q ℚ⁺.+ r)
-      ≤⟨ ℚ⁺.+-mono-≤ ε₁+ε₂≤ε+s ℚ⁺.≤-refl ⟩
+      ≤⟨ ℚ⁺.+-mono-≤ {_} {_} {q ℚ⁺.+ r} ε₁+ε₂≤ε+s ℚ⁺.≤-refl ⟩
     (ε ℚ⁺.+ s) ℚ⁺.+ (q ℚ⁺.+ r)
       ≈⟨ ℚ⁺.+-assoc ε s (q ℚ⁺.+ r) ⟩
     ε ℚ⁺.+ (s ℚ⁺.+ (q ℚ⁺.+ r))
@@ -981,8 +983,8 @@ _⊓_ : ℝᵘ → ℝᵘ → ℝᵘ
   [ (λ x-q₁+s → inj₁ (x .upper (ℚ⁺.+-mono-≤ {_} {_} {s} q₁≤q₂ ℚ⁺.≤-refl) x-q₁+s)) ,
     (λ y-q₁+s → inj₂ (y .upper (ℚ⁺.+-mono-≤ {_} {_} {s} q₁≤q₂ ℚ⁺.≤-refl) y-q₁+s)) ] (v s)
 (x ⊓ y) .closed h s with h (s /2) (s /2)
-... | inj₁ p = inj₁ (x .upper (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc {!!} {!!} {!!}) (ℚ⁺.+-congʳ {!!} {_} (ℚ⁺.half+half {s})))) p)
-... | inj₂ p = inj₂ (y .upper (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc _ _ _) (ℚ⁺.+-congʳ _ (ℚ⁺.half+half {s})))) p)
+(x ⊓ y) .closed {q} h s | inj₁ p = inj₁ (x .upper (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc q (s ℚ⁺./2) (s ℚ⁺./2)) (ℚ⁺.+-congʳ q (ℚ⁺.half+half {s})))) p)
+(x ⊓ y) .closed {q} h s | inj₂ p = inj₂ (y .upper (ℚ⁺.≤-reflexive (ℚ⁺.≃-trans (ℚ⁺.+-assoc q (s ℚ⁺./2) (s ℚ⁺./2)) (ℚ⁺.+-congʳ q (ℚ⁺.half+half {s})))) p)
 
 ⊓-lower-1 : ∀ {x y} → (x ⊓ y) ≤ x
 ⊓-lower-1 {x}{y} .*≤* x-q s = inj₁ (x .upper (ℚ⁺.+-increasing {_} {s}) x-q)

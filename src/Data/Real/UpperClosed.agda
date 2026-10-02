@@ -326,6 +326,8 @@ open binary-op (ℚ⁺._+_) (ℚ⁺.+-comm)
 +-identity : Identity _≃_ 0ℝ _+_
 +-identity = +-identityˡ , +-identityʳ
 
+open import Agda.Builtin.Int
+
 +-assoc : Associative _≃_ _+_
 +-assoc x y z .proj₁ .*≤* {q} x+⟨y+z⟩ s =
      let q₁ , q₂ , q₁+q₂≤q+s/2 , x-q₁ , y+z = x+⟨y+z⟩ (s ℚ⁺./2) in

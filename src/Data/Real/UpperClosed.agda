@@ -730,9 +730,15 @@ rational⁺-* q r .proj₂ .*≤* {ε} qr∋ε =
   let ε₁ , ε₂ , ε₁ε₂≤ε+s , q≤ε₁ , r≤ε₂ = qr∋ε s in
   begin
     ℚ⁺.fog q ℚ.* ℚ⁺.fog r
-  ≤⟨ ℚ.*-monoʳ-≤-pos {ℚ⁺.fog q} (ℚ.positive (ℚ⁺.fog-positive q)) r≤ε₂ ⟩
+  ≤⟨ ℚ.*-monoʳ-≤-nonNeg
+    (ℚ⁺.fog q)
+    {{ℚ.pos⇒nonNeg ((ℚ⁺.fog q)) {{ℚ.positive (ℚ⁺.fog-positive q)}}}}
+    r≤ε₂ ⟩
     ℚ⁺.fog q ℚ.* ℚ⁺.fog ε₂
-  ≤⟨ ℚ.*-monoˡ-≤-pos (ℚ.positive (ℚ⁺.fog-positive ε₂)) q≤ε₁ ⟩
+  ≤⟨ ℚ.*-monoˡ-≤-nonNeg
+    (ℚ⁺.fog ε₂)
+    {{ℚ.pos⇒nonNeg (ℚ⁺.fog ε₂) {{ℚ.positive (ℚ⁺.fog-positive ε₂)}}}}
+    q≤ε₁ ⟩
     ℚ⁺.fog ε₁ ℚ.* ℚ⁺.fog ε₂
   ≃⟨ ℚ.≃-sym (ℚ⁺.*-fog ε₁ ε₂) ⟩
     ℚ⁺.fog (ε₁ ℚ⁺.* ε₂)
